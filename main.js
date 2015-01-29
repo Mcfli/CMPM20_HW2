@@ -46,4 +46,46 @@ function paint(){
 	ctx.fillRect(0,0,w,h);
 	ctx.strokeStyle = "black";
 	ctx.strokeRect(0,0,w,h);
+	
+	var nx = snakeArray[0].x;
+	var ny = snackArray[0].y;
+	
+	if(dir == "right") nx++;
+	else if(dir == "left") nx--;
+	else if(dir == "up") ny--;
+	else if(dir == "down") ny++;
+	
+	// Check if game over
+	if(nx == -1 || nx == w/cw || ny == -1 || ny == h/cw || checkColl(nx,nx,snakeArray)){
+		// restart
+		init();
+		return;
+	}
+	
+	if(nx == food.x && ny == food.y){
+		var tail = {x:nx,y:ny};
+		score++;
+		createFood();
+	}
+	else{
+		var tail = snakeArray.pop();
+		tail.x = nx;
+		tail.y = ny;
+	}
+	
+	// puts back tail
+	snakeArray.unshift(tail);
+	
+	for(var i = 0; i < snakeArray.length; i++){
+		var c = snakeArray[i];
+		// paint 10px wide cells
+		paintCell(c.x,c.y);
+	}
+	
+	// paint the food
+	paintCell(food.x,food.y);
+	
+	// Score text
+	var scoreText = "Score:" + score;
+	ctx.fillText(scoreText,5,h-5);
 }
