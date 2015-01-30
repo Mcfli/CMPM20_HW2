@@ -3,7 +3,6 @@
  * Assignment 2
  */
 use2D = true;
-initGame("canvas");
 
 // Create an array to store the snake
 var snakeArray;
@@ -12,6 +11,9 @@ var dir;
 var food;
 var score;
 var cw = 10;
+var w = canvas.width();
+var h = canvas.height();
+var ctx = canvas.getContext("2d");
 
 function init(){
 	dir = "right";
@@ -73,7 +75,7 @@ function paint(){
 		tail.y = ny;
 	}
 	
-	// puts back tail
+	// put back tail
 	snakeArray.unshift(tail);
 	
 	for(var i = 0; i < snakeArray.length; i++){
@@ -88,4 +90,20 @@ function paint(){
 	// Score text
 	var scoreText = "Score:" + score;
 	ctx.fillText(scoreText,5,h-5);
+}
+
+function paintCell(x,y){
+	ctx.fillStype = "blue";
+	ctx.fillRect(x*cw,y*cw,cw,cw);
+	ctx.strokeStyle = "white";
+	ctx.strokeRect(x*cw,y*cw,cw,cw);
+}
+
+function checkColl(x,y,array){
+	for(var i = 0; i < array.length; i++){
+		if(array[i].x == x && array[i].y == y){
+			return true;
+		}
+		return false;
+	}
 }
