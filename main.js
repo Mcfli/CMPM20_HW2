@@ -2,7 +2,9 @@
  * CMPM 20
  * Assignment 2
  */
+
 use2D = true;
+initGame("canvas");
 
 // Create an array to store the snake
 var snakeArray;
@@ -20,6 +22,9 @@ function init(){
 	createSnake();
 	createFood();
 	score = 0;
+	
+	if(typeof game_loop != "undefined") clearInterval(game_loop);
+	game_loop = setInterval(paint, 60);
 }
 init();
 
