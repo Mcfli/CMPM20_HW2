@@ -33,9 +33,7 @@ $(document).ready(function(){
 		var dir;
 		var food;
 		var foodArray = [];
-		var noneEaten;
 		var spoiled;
-		var starve;
 		var score;
 		var gameIsOver;
 		var snakeArray;
@@ -47,20 +45,16 @@ $(document).ready(function(){
 			dir = "right";
 			createSnake();
 			createFood();
-			noneEaten = true;
 			spoiled = 99;
-			starve = 240;
 			score = 0;
 			ticks = 0;
 			framerate = 120;
 			gameIsOver = false;
-			console.log("This is a test");
 			if(typeof game_loop != "undefined"){
 				clearInterval(game_loop);
 			}
 			game_loop = setInterval(paint, framerate);
 		}
-		console.log("This is also a test");
 		init();
 		
 		// createSnake(): creates the snake
@@ -126,38 +120,32 @@ $(document).ready(function(){
 						if(snakeArray.length == 0){
 							gameOver();
 						}
-						tail = snakeArray.pop();
-						if(snakeArray.length == 0){
-							gameOver();
-						}
 						tail.x = newHeadX;
 						tail.y = newHeadY;
-						poisoned = true;
-					}
+						// increase speed
+						framerate -= 10;
+						}
 					else{
 						var tail = { x: newHeadX, y: newHeadY};
+						snakeArray.push(tail);
 						score++;
 					}
 					// Restart ticks
 					ticks = 0;
 					// get rid of food
 					foodArray.splice(i, 1);
-					// increase speed
-					framerate -= 5;
 					clearInterval(game_loop);
 					game_loop = setInterval(paint, framerate);
 					// create the new food
 					createFood();
-					noneEaten = false;
 					break;
 				}
 			}
-			if(noneEaten){
+			if(!gameIsOver){
 				var tail = snakeArray.pop();
 				tail.x = newHeadX;
 				tail.y = newHeadY;
 			}
-			noneEaten = true;
 			if(ticks % 60 == 0 && ticks != 0){
 				// Create food every 60 ticks
 				createFood();
@@ -167,29 +155,6 @@ $(document).ready(function(){
 				if(foodArray[i].ticks > 160){
 					foodArray.splice(i, 1);
 				}
-			}
-			
-			if(ticks > starve){
-				// Warning text for starving
-				ctx.font = "20pt Times";
-				ctx.fillStyle = "black";
-				ctx.fillText("Starving!", 170, 35);
-			}
-			else{
-				// Hidden
-				ctx.font = "20pt Times";
-				ctx.fillStyle = "white";
-				ctx.fillText("Starving!", 170, 35);
-			}
-			
-			if(ticks >= starve + 120 && ticks % 60 == 0){
-				// Lose a part after 60 ticks if starving
-				tail = snakeArray.pop();
-				if(snakeArray.length == 0){
-					gameOver();
-				}
-				tail.x = newHeadX;
-				tail.y = newHeadY;
 			}
 			// Put tail ack as first cell
 			snakeArray.unshift(tail);
