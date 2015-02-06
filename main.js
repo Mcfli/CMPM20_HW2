@@ -51,12 +51,13 @@ $(document).ready(function(){
 			ticks = 0;
 			framerate = 120;
 			gameIsOver = false;
-			
+			console.log("This is a test");
 			if(typeof game_loop != "undefined"){
 				clearInterval(game_loop);
 			}
 			game_loop = setInterval(paint, framerate);
 		}
+		console.log("This is also a test");
 		init();
 		
 		function createSnake(){
@@ -67,7 +68,7 @@ $(document).ready(function(){
 			}
 		}
 		
-		function creatFood(){
+		function createFood(){
 			food = {
 					x: Math.round(Math.random() * (w - cellW) / cellW),
 					y: Math.round(Math.random() * (h - cellW) / cellW),
@@ -88,7 +89,7 @@ $(document).ready(function(){
 			
 			// Create vars for x and y loc of snake head
 			var newHeadX = snakeArray[0].x;
-			var newHeadY = snaekArray[0].y;
+			var newHeadY = snakeArray[0].y;
 			
 			// Determine where next head will go
 			if(dir == "right"){
@@ -157,7 +158,7 @@ $(document).ready(function(){
 			}
 			for(var i = 0; i < foodArray.length; i++){
 				if(foodArray[i].ticks > 160){
-					foodArray.splice(j, 1);
+					foodArray.splice(i, 1);
 				}
 			}
 			
@@ -271,7 +272,7 @@ $(document).ready(function(){
 			ctx.strokeText(scoreText, cenX, cenY - 50);
 			ctx.fillText(scoreText, cenX, cenY - 50);
 			ctx.font = 'bold 30px sans-serif';
-			ctx.fillStyle '#000';
+			ctx.fillStyle = '#000';
 			ctx.strokeStyle = 'white';
 			ctx.lineWidth = 2;
 			ctx.strokeText('Game Over', cenX, cenY - 10);
