@@ -5,6 +5,7 @@
 
 $(document).ready(function(){
 		var keys = [];
+		// add keydown listener
 		window.addEventListener("keydown",
 		function(k){
 			keys[k.keyCode] = true;
@@ -16,6 +17,7 @@ $(document).ready(function(){
 			}
 		},
 		false);
+		// add keyup listener
 		window.addEventListener('keyup',
 		function(k){
 			keys[k.keyCode] = false;
@@ -39,6 +41,7 @@ $(document).ready(function(){
 		var snakeArray;
 		var framerate;
 		
+		// init(): initialize variables
 		function init(){
 			// Set default direction
 			dir = "right";
@@ -60,6 +63,7 @@ $(document).ready(function(){
 		console.log("This is also a test");
 		init();
 		
+		// createSnake(): creates the snake
 		function createSnake(){
 			var length = 5;
 			snakeArray = [];
@@ -68,6 +72,7 @@ $(document).ready(function(){
 			}
 		}
 		
+		// createFood(): creates food in random spots
 		function createFood(){
 			food = {
 					x: Math.round(Math.random() * (w - cellW) / cellW),
@@ -78,6 +83,7 @@ $(document).ready(function(){
 				foodArray.push(food);
 		}
 		
+		// paint(): updates snake and food
 		function paint(){
 			if(gameIsOver){
 				return;
@@ -156,6 +162,7 @@ $(document).ready(function(){
 				// Create food every 60 ticks
 				createFood();
 			}
+			// destory bad food
 			for(var i = 0; i < foodArray.length; i++){
 				if(foodArray[i].ticks > 160){
 					foodArray.splice(i, 1);
@@ -164,14 +171,15 @@ $(document).ready(function(){
 			
 			if(ticks > starve){
 				// Warning text for starving
-				ctx.font = "25pt Times";
+				ctx.font = "20pt Times";
 				ctx.fillStyle = "black";
-				ctx.fillText("Starving! Must eat food!", 5, 35);
+				ctx.fillText("Starving!", 170, 35);
 			}
 			else{
-				ctx.font = "25pt Times";
+				// Hidden
+				ctx.font = "20pt Times";
 				ctx.fillStyle = "white";
-				ctx.fillText("Starving! Must eat food!", 5, 35);
+				ctx.fillText("Starving!", 170, 35);
 			}
 			
 			if(ticks >= starve + 120 && ticks % 60 == 0){
@@ -190,30 +198,30 @@ $(document).ready(function(){
 			// Paint the food
 			for(var i = 0; i < foodArray.length; i++){
 				if(foodArray[i].ticks > spoiled){
-					paintCell(foodArray[i].x, foodArray[i].y, "lime", "Black");
+					paintCell(foodArray[i].x, foodArray[i].y, "red", "Black");
 				}
 				else{
-					paintCell(foodArray[i].x, foodArray[i].y, "red", "white");
+					paintCell(foodArray[i].x, foodArray[i].y, "blue", "white");
 					ctx.font = "7pt Times";
-					ctx.fillStyle = "lime";
+					ctx.fillStyle = "white";
 					// Food timer
-					var timer = "" + foodArray[i].ticks;
+					var timer = "" + ( 100 - foodArray[i].ticks);
 					ctx.fillText(timer, foodArray[i].x * cellW, foodArray[i].y * cellW + 9);
 				}
 			}
 			
 			// Paint the score
 			var scoreText = "Score: " + score;
-			ctx.font = "25pt Times";
-			ctx.fillStyle = "Orange";
+			ctx.font = "20pt Times";
+			ctx.fillStyle = "Blue";
 			ctx.fillText(scoreText, 5, h - 5);
 			ctx.strokeStyle = "Black";
 			ctx.strokeText(scoreText, 5, h - 5);
 			
 			var snakeLenText = "Length: " + snakeArray.length;
 			ctx.font = "12pt Times";
-			ctx.fillStyle = "black";
-			ctx.fillText(snakeLenText, 135, h - 5);
+			ctx.fillStyle = "grey";
+			ctx.fillText(snakeLenText, 375, h - 5);
 			
 			// tick timer
 			ticks++;
@@ -223,6 +231,7 @@ $(document).ready(function(){
 			}
 		}
 		
+		// paintSnake(): draw snake
 		function paintSnake(){
 			for(var i = 0; i < snakeArray.length; i++){
 				var curr = snakeArray[i];
@@ -232,57 +241,14 @@ $(document).ready(function(){
 						paintCell(curr.x, curr.y, "red", "white");
 					}
 					else{
-						paintCell(curr.x, curr.y, "purple", "white");
+						paintCell(curr.x, curr.y, "blue", "white");
 					}
 				}
 				else{
 					// paint the snake normally
-					if(i == 0){
-						var head = document.getElementById("part");
-						ctx.drawImage(head, curr.x * cellW, curr.y * cellW, cellW, cellW);
-						}
-					else if(i == snakeArray.length - 1){
-						var tail = document.getElementById("part");
-						ctx.drawImage(tail, curr.x * cellW, curr.y * cellW, cellW, cellW);
-					}
-					else{
-						var body = document.getElementById("part");
-						ctx.drawImage(body, curr.x * cellW, curr.y * cellW, cellW, cellW);
-					}
+					paintCell(curr.x, curr.y, "black", "white");
 				}
 			}
-		}
-		
-		// gameOver(): Displays game over screen
-		function gameOver(){
-			while(foodArray.length != 0){
-				// empty foodArray
-				foodArray.pop();
-			}
-			ctx.save();
-			ctx.font = 'bold 40px sans-serif';
-			ctx.fillStyle = 'orange';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 5;
-			var cenX = w / 2;
-			var cenY = w / 2;
-			var scoreText = "Your Score: " + score;
-			ctx.strokeText(scoreText, cenX, cenY - 50);
-			ctx.fillText(scoreText, cenX, cenY - 50);
-			ctx.font = 'bold 30px sans-serif';
-			ctx.fillStyle = '#000';
-			ctx.strokeStyle = 'white';
-			ctx.lineWidth = 2;
-			ctx.strokeText('Game Over', cenX, cenY - 10);
-			ctx.fillText('Game Over', cenX, cenY -10);
-			ctx.font = 'bold 15px sans-serif';
-			ctx.strokeText('Press space to restart game', cenX, cenY + 15);
-			ctx.fillText('Press space to restart game', cenX, cenY + 15);
-			
-			gameIsOver = true;
-			ctx.restore();
 		}
 		
 		// paintCell(): paint cell blocks
@@ -301,6 +267,38 @@ $(document).ready(function(){
 				}
 			}
 			return false;
+		}
+		
+		// gameOver(): Displays game over screen
+		function gameOver(){
+			while(foodArray.length != 0){
+				// empty foodArray
+				foodArray.pop();
+			}
+			ctx.save();
+			ctx.font = 'bold 45px arial';
+			ctx.fillStyle = 'red';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 5;
+			var cenX = w / 2;
+			var cenY = w / 2;
+			ctx.strokeText('Game Over', cenX, cenY - 50);
+			ctx.fillText('Game Over', cenX, cenY - 50);
+			ctx.font = 'bold 30px arial';
+			ctx.fillStyle = 'green';
+			var scoreText = "Your Score: " + score;
+			ctx.strokeText(scoreText, cenX, cenY - 10);
+			ctx.fillText(scoreText, cenX, cenY -10);
+			ctx.font = 'bold 15px arial';
+			ctx.fillStyle = '#000';
+			ctx.strokeStyle = 'white';
+			ctx.lineWidth = 2;
+			ctx.strokeText('Press space to restart', cenX, cenY + 15);
+			ctx.fillText('Press space to restart', cenX, cenY + 15);
+			gameIsOver = true;
+			ctx.restore();
 		}
 		
 		$(document).keydown(function(k){
